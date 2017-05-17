@@ -1,0 +1,24 @@
+{
+  "name": "mcards_api.v0",
+  "version": "0.0.1",
+  "description": "Api mcards",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "debug": "node-debug server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Giovanny Reyes O",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "firebase-admin": "^4.2.1",
+    "moment": "^2.18.1",
+    "mongoose": "^4.9.9"
+  },
+  "devDependencies": {
+    "node-inspector": "^1.1.1",
+    "nodemon": "^1.11.0"
+  }
+}
