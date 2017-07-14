@@ -4,6 +4,8 @@
   "description": "Api mcards",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
+    "debug": "node-debug server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Giovanny Reyes O",
@@ -18,5 +20,8 @@
   "devDependencies": {
     "node-inspector": "^1.1.1",
     "nodemon": "^1.11.0"
+  },
+  "engines": {
+    "node": "4.8.4"
   }
 }
