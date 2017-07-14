@@ -8,7 +8,7 @@ const serviceAccount = require("./firebase/key.json");
    app.listen(port, () => {
         console.log(`MCards API ready on port  ${port}`)
     })
-/*mongoose.connect(config.DB_URL, (err, res) => {
+mongoose.connect(config.DB_URL_PRODUCTION, (err, res) => {
     if (err)
         throw err
     console.log("Conexion a la base de datos establecida")
@@ -17,4 +17,4 @@ const serviceAccount = require("./firebase/key.json");
       databaseURL: "https://mcards-c8e47.firebaseio.com"
     });
  
-})*/
+})

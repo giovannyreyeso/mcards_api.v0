@@ -5,5 +5,6 @@ const DB_URL_PRODUCTION = 'mongodb://giovannyreyeso:T00rCreeper89!?@ds157682.mla
 module.exports = {
     API_PORT,
     API_BASE_VERSION,
+    DB_URL,
     DB_URL_PRODUCTION
 }
