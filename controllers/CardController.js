@@ -1,3 +1,4 @@
+'use strict'
 const Card = require('../models/Card')
 const User = require('../models/User')
 const ObjectId = require('mongoose').Types.ObjectId
@@ -7,8 +8,7 @@ const CardService = require('../services/CardService')
 function List(req, res) {
     Card.find({
         'user': new ObjectId(req.user._id)
-    }).then(function(cards) {
-
+    }).then(function (cards) {
         let allCards = []
         for (var i = 0; i < cards.length; i++) {
             allCards.push({
@@ -32,9 +32,12 @@ function Create(req, res) {
         aviable: req.body.aviable,
         cutDay: req.body.cutDay
     })
-    newCard.save(function(err, card) {
+    newCard.save(function (err, card) {
         if (err)
-            return res.status(500).json(err)
+            return res.status(500).json({
+                statusCode: 500,
+                message: err.message
+            })
         let card_ = {
             name: card.name,
             aviable: card.aviable,

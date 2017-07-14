@@ -1,18 +1,34 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const CardSchema = Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
     isCreditCard: {
         type: Boolean,
         default: true
     },
-    cutDay: Number,
-    limit: Number,
-    aviable: Number,
-    cat: Number,
+    cutDay: {
+        type: Number,
+        required: true
+    },
+    limit: {
+        type: Number,
+        default: 0
+    },
+    aviable: {
+        type: Number,
+        default: 0
+    },
+    cat: {
+        type: Number,
+        default: 0
+    },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     shops: [
         {
@@ -21,7 +37,7 @@ const CardSchema = Schema({
         }
     ]
 }, {
-    timestamps: true,
-    versionKey: false
-})
+        timestamps: true,
+        versionKey: false
+    })
 module.exports = mongoose.model('Card', CardSchema)

@@ -10,4 +10,5 @@ const CardController = require('../controllers/CardController')
 api.get('/me', auth.isAuthorized, UserController.Me)
 api.get('/card', auth.isAuthorized, CardController.List)
 api.post('/card', auth.isAuthorized, CardController.Create)
+//api.post('/register', auth.Register, UserController.Register)
 module.exports = api

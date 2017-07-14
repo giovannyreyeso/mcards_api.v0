@@ -16,8 +16,8 @@ function isAuthorized(req, res, next) {
             }
         } else {
             return res.json(401, {
-                error: true,
-                mensaje: 'El formato para la autorizacion: Bearer [token]'
+                statusCode: 401,
+                message: 'El formato para la autorizacion: Bearer [token]'
             });
         }
     } else if (req.param('token')) {
@@ -26,27 +26,36 @@ function isAuthorized(req, res, next) {
         delete req.query.token;
     } else {
         return res.json(401, {
-            error: true,
-            mensaje: 'La cabezera authorization no se encuentra'
+            statusCode: 401,
+            message: 'La cabezera authorization no se encuentra'
         });
     }
-    firebase_admin.auth().verifyIdToken(token).then(function(result) {
+    firebase_admin.auth().verifyIdToken(token).then(function (result) {
+        //console.log(result)
         req.user = result;
         User.findOne({
             'uid': req.user.user_id
-        }).then(function(user) {
+        }).then(function (user) {
             req.user._id = user._id
             next();
-        }).catch(function(err) {
-            return res.json(500, {
-                error: true,
-                mensaje: 'Ocuriro un error el usuario no se encuentra en la BD'
+        }).catch(function (err) {
+            const user = new User({
+                uid: req.user.user_id,
+                name: req.user.name,
+                email: req.user.email,
+                picture: req.user.picture
+            });
+            user.save(function (err, userSaved) {
+                if (err)
+                    res.status(500).json(err)
+                req.user._id = userSaved._id
+                next();
             });
         })
-    }).catch(function(error) {
+    }).catch(function (error) {
         return res.json(401, {
-            error: true,
-            mensaje: 'el token es invalido'
+            statusCode: 401,
+            message: 'el token es invalido'
         });
     })
 }
