@@ -2,7 +2,7 @@
   "name": "mcards_api.v0",
   "version": "0.0.1",
   "description": "Api mcards",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "debug": "node-debug server.js",
