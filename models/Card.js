@@ -13,6 +13,10 @@ const CardSchema = Schema({
         type: Number,
         required: true
     },
+    balance: {
+        type: Number,
+        default: 0
+    },
     limit: {
         type: Number,
         default: 0
@@ -30,10 +34,10 @@ const CardSchema = Schema({
         ref: 'User',
         required: true
     },
-    shops: [
+    purchases: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Shop'
+            ref: 'Purchase'
         }
     ]
 }, {

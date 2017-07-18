@@ -1,20 +1,27 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const CashSchema = Schema({
-    description: String,
-    aviable: Number,
+    description: {
+        type: String,
+        required: true
+    },
+    aviable: {
+        type: Number,
+        required: true
+    },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
-    shops: [
+    purchases: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Shop'
+            ref: 'Purchase'
         }
     ]
 }, {
-    timestamps: true,
-    versionKey: false
-})
+        timestamps: true,
+        versionKey: false
+    })
 module.exports = mongoose.model('Cash', CashSchema)

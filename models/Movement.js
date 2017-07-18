@@ -3,10 +3,17 @@ const Schema = mongoose.Schema
 const MovementSchema = Schema({
     type: {
         type: String,
-        enum: ['PAY', 'BALANCE']
+        enum: ['PAY', 'BALANCE'],
+        require: true
     },
-    date: Date,
-    amount: Number,
+    date: {
+        type: Date,
+        require: true
+    },
+    amount: {
+        type: Number,
+        require: true
+    },
     card: {
         type: Schema.Types.ObjectId,
         ref: 'Card'
@@ -16,7 +23,7 @@ const MovementSchema = Schema({
         ref: 'Cash'
     }
 }, {
-    timestamps: true,
-    versionKey: false
-})
+        timestamps: true,
+        versionKey: false
+    })
 module.exports = mongoose.model('Movement', MovementSchema)
