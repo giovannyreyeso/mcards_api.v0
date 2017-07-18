@@ -7,9 +7,8 @@ const moment = require('moment')
 const CardService = require('../services/CardService')
 
 function Purchases(req, res) {
-
     Purchase.find({
-        'card': new ObjectId(req.params.id),
+        'card': new ObjectId(req.param.id),
         'user': req.user._id
     }).then(function (purchases) {
         return res.status(200).json(purchases);
@@ -21,11 +20,15 @@ function List(req, res) {
     }).then(function (cards) {
         let allCards = []
         for (var i = 0; i < cards.length; i++) {
+            let aviable = 0;
+            if (cards[i].aviable >= 0) {
+                aviable = cards[i].aviable;
+            }
             allCards.push({
                 _id: cards[i]._id,
                 name: cards[i].name,
                 balance: cards[i].balance,
-                aviable: cards[i].aviable,
+                aviable: aviable,
                 cutDay: cards[i].cutDay,
                 nextCutDay: CardService.GetNextDayCut(cards[i].cutDay)
             })

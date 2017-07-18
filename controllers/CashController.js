@@ -5,7 +5,6 @@ const User = require('../models/User')
 const ObjectId = require('mongoose').Types.ObjectId
 
 function Purchases(req, res) {
-    console.log(req.params.id);
     Purchase.find({
         'cash': new ObjectId(req.params.id),
         'user': req.user._id
