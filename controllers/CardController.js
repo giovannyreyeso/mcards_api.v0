@@ -69,6 +69,7 @@ function List(req, res) {
     Card.find({
         'user': new ObjectId(req.user._id)
     }).then(function (cards) {
+
         let allCards = []
         for (var i = 0; i < cards.length; i++) {
             let aviable = 0;
@@ -78,8 +79,10 @@ function List(req, res) {
             allCards.push({
                 _id: cards[i]._id,
                 name: cards[i].name,
+                isCreditCard: cards[i].isCreditCard,
+                limit: cards[i].limit,
                 balance: cards[i].balance,
-                aviable: aviable,
+                available: cards[i].available,
                 cutDay: cards[i].cutDay,
                 nextCutDay: CardService.GetNextDayCutUnix(cards[i].cutDay)
             })
@@ -87,6 +90,8 @@ function List(req, res) {
             /*cards[i].cutDay = */
         }
         return res.status(200).json(allCards)
+    }).catch(function (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
     })
 }
 function GetById(req, res) {
@@ -136,7 +141,7 @@ function Create(req, res) {
     const newCard = new Card({
         user: req.user._id,
         name: req.body.name,
-        aviable: req.body.aviable,
+        available: req.body.available,
         cutDay: req.body.cutDay
     })
     newCard.save(function (err, card) {
@@ -146,11 +151,14 @@ function Create(req, res) {
                 message: err.message
             })
         let card_ = {
-            name: card.name,
-            aviable: card.aviable,
             _id: card._id,
+            name: card.name,
+            isCreditCard: card.isCreditCard,
+            limit: card.limit,
+            balance: card.balance,
+            available: card.available,
             cutDay: card.cutDay,
-            nextCutDay: CardService.GetNextDayCut(card.cutDay)
+            nextCutDay: CardService.GetNextDayCutUnix(cards[i].cutDay)
         }
         return res.status(200).json(card_)
     })

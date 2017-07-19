@@ -21,11 +21,7 @@ const CardSchema = Schema({
         type: Number,
         default: 0
     },
-    aviable: {
-        type: Number,
-        default: 0
-    },
-    cat: {
+    available: {
         type: Number,
         default: 0
     },
