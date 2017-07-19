@@ -8,6 +8,8 @@ const UserController = require('../controllers/UserController')
 const CardController = require('../controllers/CardController')
 const CashController = require('../controllers/CashController')
 const PurchaseController = require('../controllers/PurchaseController')
+const MovementController = require('../controllers/MovementController')
+
 api.get('/me', auth.isAuthorized, UserController.Me)
 
 /**BEGIN CARDS*/
@@ -42,5 +44,16 @@ api.get('/card/:id/purchase',auth.isAuthorized,CardController.Purchases)
 api.get('/card/:id/purchase/nextmonth',auth.isAuthorized,CardController.PurchasesNextMonth)
 api.get('/card/:id/purchase/month',auth.isAuthorized,CardController.PurchasesNow)
 /**END PURACHASE BY CARD**/
+
+/**BEGIN MOVEMENT BY CARD AND CASH*/
+api.get('/movement',auth.isAuthorized,MovementController.List)
+api.get('/movement/:id',auth.isAuthorized,MovementController.GetById)
+api.post('/movement', auth.isAuthorized, MovementController.Create)
+api.put('/movement/:id', auth.isAuthorized, MovementController.Modify)
+api.delete('/movement/:id',auth.isAuthorized,MovementController.Delete);
+
+api.get('/card/:id/movement',auth.isAuthorized,MovementController.GetMovementByCard)
+api.get('/cash/:id/movement',auth.isAuthorized,MovementController.GetMovementByCash)
+/**END MOVEMENT BY CARD AND CASH**/
 
 module.exports = api
