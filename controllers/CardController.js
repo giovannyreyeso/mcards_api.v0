@@ -158,7 +158,7 @@ function Create(req, res) {
             balance: card.balance,
             available: card.available,
             cutDay: card.cutDay,
-            nextCutDay: CardService.GetNextDayCutUnix(cards[i].cutDay)
+            nextCutDay: CardService.GetNextDayCutUnix(card.cutDay)
         }
         return res.status(200).json(card_)
     })
