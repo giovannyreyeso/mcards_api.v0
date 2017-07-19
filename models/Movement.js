@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const MovementSchema = Schema({
     type: {
         type: String,
-        enum: ['PAY', 'BALANCE'],
+        enum: ['PAY', 'BALANCE', 'DEPOSIT'],
         require: true
     },
     date: {
@@ -12,6 +12,11 @@ const MovementSchema = Schema({
     },
     amount: {
         type: Number,
+        require: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         require: true
     },
     card: {

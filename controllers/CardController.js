@@ -5,13 +5,64 @@ const User = require('../models/User')
 const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment')
 const CardService = require('../services/CardService')
-
+const PurchaseService = require('../services/PurchaseService')
+/**TO DO
+ * 1) Modificar la fecha de compra a Number para usar unix
+ * 
+****/
 function Purchases(req, res) {
     Purchase.find({
-        'card': new ObjectId(req.param.id),
+        'card': req.params.id,
         'user': req.user._id
     }).then(function (purchases) {
         return res.status(200).json(purchases);
+    }).catch(function (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    })
+}
+function PurchasesNow(req, res) {
+    Card.findOne({ '_id': req.params.id }).then(function (card) {
+        if (card === null)
+            throw new Error('La tarjeta no existe');
+        let actualCutDay = CardService.GetActualDayCut(card.cutDay);
+        let pastCutDay = CardService.GetPastDayCut(card.cutDay);
+
+        Purchase.find({
+            'card': new ObjectId(card._id),
+            'user': req.user._id,
+            'date': { "$gte": pastCutDay._d, "$lt": actualCutDay._d }
+        }).then(function (purchases) {
+            let purchasesData = {
+                payDay: CardService.GetPayDay(card.cutDay),
+                total: PurchaseService.SumPurchase(purchases),
+                purchases: purchases
+            }
+            return res.status(200).json(purchasesData)
+        })
+    }).catch(function (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    })
+}
+function PurchasesNextMonth(req, res) {
+    Card.findOne({ '_id': req.params.id }).then(function (card) {
+        if (card === null)
+            throw new Error('La tarjeta no existe');
+        let actualCutDay = CardService.GetActualDayCut(card.cutDay);
+        let nextCutDay = CardService.GetNextDayCut(card.cutDay);
+        Purchase.find({
+            'card': new ObjectId(card._id),
+            'user': req.user._id,
+            'date': { "$gte": actualCutDay._d, "$lt": nextCutDay._d }
+        }).then(function (purchases) {
+            let purchasesData = {
+                payDay: CardService.GetNextPayDay(card.cutDay),
+                total: PurchaseService.SumPurchase(purchases),
+                purchases: purchases
+            }
+            return res.status(200).json(purchasesData)
+        })
+    }).catch(function (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
     })
 }
 function List(req, res) {
@@ -30,7 +81,7 @@ function List(req, res) {
                 balance: cards[i].balance,
                 aviable: aviable,
                 cutDay: cards[i].cutDay,
-                nextCutDay: CardService.GetNextDayCut(cards[i].cutDay)
+                nextCutDay: CardService.GetNextDayCutUnix(cards[i].cutDay)
             })
             console.log(allCards[i].nextCutDay)
             /*cards[i].cutDay = */
@@ -110,5 +161,7 @@ module.exports = {
     Modify,
     GetById,
     Delete,
-    Purchases
+    Purchases,
+    PurchasesNow,
+    PurchasesNextMonth
 }

@@ -36,11 +36,11 @@ api.put('/purchase/:id', auth.isAuthorized, PurchaseController.Modify)
 api.delete('/purchase/:id',auth.isAuthorized,PurchaseController.Delete);
 /**END Purchase**/
 
-/**BEGIN PURCHASE BY CARD*/
+/**BEGIN PURCHASE BY CARD AND CASH*/
 api.get('/cash/:id/purchase',auth.isAuthorized,CashController.Purchases)
 api.get('/card/:id/purchase',auth.isAuthorized,CardController.Purchases)
-//api.get('/card/:id/purchase/nextmonth',auth.isAuthorized,CardController.PurchasesNext)
-//api.get('/card/:id/purchase/month',auth.isAuthorized,CardController.PurchasesNow)
+api.get('/card/:id/purchase/nextmonth',auth.isAuthorized,CardController.PurchasesNextMonth)
+api.get('/card/:id/purchase/month',auth.isAuthorized,CardController.PurchasesNow)
 /**END PURACHASE BY CARD**/
 
 module.exports = api
