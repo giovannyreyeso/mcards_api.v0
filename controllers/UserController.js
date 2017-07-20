@@ -1,5 +1,14 @@
 const User = require('../models/User')
+function FinByEmail(req, res) {
+    User.find({
+        'email': req.query.email
+    }).select({ "name": 1, "_id": 1, "email": 1, "picture": 1 }).then(function (users) {
+        return res.status(200).json(users);
+    }).catch(function (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    })
 
+}
 function Me(req, res) {
     //console.log(req.user._id)
     User.findOne({
@@ -47,5 +56,6 @@ function Register(req, res) {
 }
 module.exports = {
     Me,
-    Register
+    Register,
+    FinByEmail
 }

@@ -6,6 +6,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment')
 const CardService = require('../services/CardService')
 const PurchaseService = require('../services/PurchaseService')
+const DateService = require('../services/DateService')
 /**TO DO
  * 1) Modificar la fecha de compra a Number para usar unix
  * 
@@ -21,51 +22,58 @@ function Purchases(req, res) {
     })
 }
 function PurchasesNow(req, res) {
+    let card_obj = null;
     Card.findOne({ '_id': req.params.id }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
         let actualCutDay = CardService.GetActualDayCutUnix(card.cutDay);
         let pastCutDay = CardService.GetPastDayCutUnix(card.cutDay);
-
-        Purchase.find({
+        card_obj = card;
+        return Purchase.find({
             'card': new ObjectId(card._id),
             'user': req.user._id,
-            'date': { "$gte": pastCutDay._d, "$lt": actualCutDay._d }
-        }).then(function (purchases) {
-            let purchasesData = {
-                payDay: CardService.GetPayDay(card.cutDay),
-                total: PurchaseService.SumPurchase(purchases),
-                purchases: purchases
-            }
-            return res.status(200).json(purchasesData)
+            'date': { "$gte": pastCutDay, "$lt": actualCutDay }
         })
+    }).then(function (purchases) {
+        let purchasesData = {
+            payDay: CardService.GetPayDayUnix(card_obj.cutDay),
+            total: PurchaseService.SumPurchase(purchases),
+            purchases: purchases
+        }
+        return res.status(200).json(purchasesData)
     }).catch(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     })
 }
 function PurchasesNextMonth(req, res) {
+    let card_obj = null;
     Card.findOne({ '_id': req.params.id }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
         let actualCutDay = CardService.GetActualDayCutUnix(card.cutDay);
         let nextCutDay = CardService.GetNextDayCutUnix(card.cutDay);
-        Purchase.find({
+        card_obj = card;
+        return Purchase.find({
             'card': new ObjectId(card._id),
             'user': req.user._id,
-            'date': { "$gte": actualCutDay._d, "$lt": nextCutDay._d }
-        }).then(function (purchases) {
-            let purchasesData = {
-                payDay: CardService.GetNextPayDay(card.cutDay),
-                total: PurchaseService.SumPurchase(purchases),
-                purchases: purchases
-            }
-            return res.status(200).json(purchasesData)
+            'date': { "$gte": actualCutDay, "$lt": nextCutDay }
         })
+    }).then(function (purchases) {
+        let purchasesData = {
+            payDay: CardService.GetNextPayDay(card_obj.cutDay),
+            total: PurchaseService.SumPurchase(purchases),
+            purchases: purchases
+        }
+        return res.status(200).json(purchasesData)
     }).catch(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     })
 }
 function SharedWith(req, res) {
+    let date = req.params.date;
+    if (!DateService.IsValidDate(date, 30)) {
+        throw new Error("El link para compartir ha caducado");
+    }
     Card.findOne({ '_id': req.params.id }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');

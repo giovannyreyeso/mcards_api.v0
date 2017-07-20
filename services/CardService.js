@@ -26,6 +26,7 @@ function GetPastDayCut(cutDay) {
     //console.log(month.unix());
     return month;
 }
+
 function GetPastDayCutUnix(cutDay) {
     let mcutDay = createDateFromCutDay(cutDay);
     //console.log(mcutDay.add(1, 'month').format('x'))
@@ -117,5 +118,6 @@ module.exports = {
     GetPayDayUnix,
     GetPayDay,
     GetNextPayDay,
-    GetNextPayDayUnix
+    GetNextPayDayUnix,
+    GetActualDayCutUnix
 }

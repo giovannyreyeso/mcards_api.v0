@@ -11,14 +11,14 @@ const PurchaseController = require('../controllers/PurchaseController')
 const MovementController = require('../controllers/MovementController')
 
 api.get('/me', auth.isAuthorized, UserController.Me)
-
+api.get('/user',auth.isAuthorized,UserController.FinByEmail);
 /**BEGIN CARDS*/
 api.get('/card/:id', auth.isAuthorized, CardController.GetById)
 api.get('/card', auth.isAuthorized, CardController.List)
 api.post('/card', auth.isAuthorized, CardController.Create)
 api.put('/card/:id', auth.isAuthorized, CardController.Modify)
 api.delete('/card/:id', auth.isAuthorized, CardController.Delete);
-api.post('/card/:id/shared', auth.isAuthorized, CardController.SharedWith)
+api.post('/card/:id/shared/:date', auth.isAuthorized, CardController.SharedWith)
 api.delete('/card/:id/shared/:iduser/', auth.isAuthorized, CardController.UndoShared)
 //api.get('/card/:id/movement',auth.isAuthorized,CashController.Movement);
 /**END CARDS**/
