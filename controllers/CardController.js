@@ -165,7 +165,7 @@ function Modify(req, res) {
     }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
-        if (card.user.toString() == req.user._id.toString())
+        if (card.user.toString() != req.user._id.toString())
             throw new Error('La tarjeta no te pertenece =(');
         return card;
     }).then(function (card) {
