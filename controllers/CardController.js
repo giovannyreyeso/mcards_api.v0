@@ -106,6 +106,9 @@ function List(req, res) {
             if (allCards[i].available >= 0) {
                 available = allCards[i].available;
             }
+            let isOwner = false;
+            if (allCards[i].user.toString() == req.user._id.toString())
+                isOwner = true;
             resultCards.push({
                 _id: allCards[i]._id,
                 name: allCards[i].name,
@@ -114,7 +117,8 @@ function List(req, res) {
                 balance: allCards[i].balance,
                 available: available,
                 cutDay: allCards[i].cutDay,
-                nextCutDay: CardService.GetNextDayCutUnix(allCards[i].cutDay)
+                nextCutDay: CardService.GetNextDayCutUnix(allCards[i].cutDay),
+                owner: isOwner
             })
             /*cards[i].cutDay = */
         }
@@ -153,7 +157,7 @@ function Modify(req, res) {
     }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
-        if(card.user != req.user._id)
+        if (card.user.toString() == req.user._id.toString())
             throw new Error('La tarjeta no te pertenece =(');
         return card;
     }).then(function (card) {
