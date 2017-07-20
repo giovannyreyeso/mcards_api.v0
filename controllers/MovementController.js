@@ -1,5 +1,5 @@
 'use strict'
-const Movement = require('../models/Purchase')
+const Movement = require('../models/Movement')
 const User = require('../models/User')
 const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment')
@@ -61,16 +61,16 @@ function Create(req, res) {
         user: req.user._id,
         type: req.body.type,
         date: req.body.date,
-        amount: req.body.amount,
+        total: req.body.total,
         cash: req.body.cash
     })
     if (req.body.card) {
         delete newMovement.cash;
-        newPurchase = new Movement({
+        newMovement = new Movement({
             user: req.user._id,
             type: req.body.type,
             date: req.body.date,
-            amount: req.body.amount,
+            total: req.body.total,
             card: req.body.card
         })
     }

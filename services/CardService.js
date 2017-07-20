@@ -57,7 +57,7 @@ function GetNextPayDay(cutDay) {
     } else {
         month = mcutDay.add(20, 'days');
     }
-    console.log(month)
+    //console.log(month)
     return month;
 }
 function GetNextPayDayUnix(cutDay) {

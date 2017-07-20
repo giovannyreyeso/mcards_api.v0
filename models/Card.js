@@ -30,6 +30,10 @@ const CardSchema = Schema({
         ref: 'User',
         required: true
     },
+    sharedWith: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     purchases: [
         {
             type: Schema.Types.ObjectId,

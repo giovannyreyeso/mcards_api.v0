@@ -65,31 +65,60 @@ function PurchasesNextMonth(req, res) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     })
 }
+function SharedWith(req, res) {
+    Card.findOne({ '_id': req.params.id }).then(function (card) {
+        if (card === null)
+            throw new Error('La tarjeta no existe');
+        return Card.update(
+            { _id: req.params.id },
+            { $push: { sharedWith: req.body.sharedWithUser } }
+        );
+    }).then(function (result) {
+        return res.status(200).json(result);
+    }).catch(function (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    })
+}
+function UndoShared(req, res) {
+    Card.findOne({ '_id': req.params.id }).then(function (card) {
+        if (card === null)
+            throw new Error('La tarjeta no existe');
+            card.sharedWith.pull(req.params.iduser)
+        return card.save()
+    }).then(function (result) {
+        return res.status(200).json({statusCode:200,message:'Ya no compartes esta tarjeta con este usuario'});
+    }).catch(function (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+    })
+}
 function List(req, res) {
+    let allCards = []
+    let resultCards = []
     Card.find({
         'user': new ObjectId(req.user._id)
     }).then(function (cards) {
-
-        let allCards = []
-        for (var i = 0; i < cards.length; i++) {
-            let aviable = 0;
-            if (cards[i].aviable >= 0) {
-                aviable = cards[i].aviable;
+        allCards = allCards.concat(cards);
+        return Card.find({ sharedWith: { "$in": [req.user._id] } });
+    }).then(function (cards) {
+        allCards = allCards.concat(cards);
+        for (var i = 0; i < allCards.length; i++) {
+            let available = 0;
+            if (allCards[i].available >= 0) {
+                available = allCards[i].available;
             }
-            allCards.push({
-                _id: cards[i]._id,
-                name: cards[i].name,
-                isCreditCard: cards[i].isCreditCard,
-                limit: cards[i].limit,
-                balance: cards[i].balance,
-                available: cards[i].available,
-                cutDay: cards[i].cutDay,
-                nextCutDay: CardService.GetNextDayCutUnix(cards[i].cutDay)
+            resultCards.push({
+                _id: allCards[i]._id,
+                name: allCards[i].name,
+                isCreditCard: allCards[i].isCreditCard,
+                limit: allCards[i].limit,
+                balance: allCards[i].balance,
+                available: available,
+                cutDay: allCards[i].cutDay,
+                nextCutDay: CardService.GetNextDayCutUnix(allCards[i].cutDay)
             })
-            console.log(allCards[i].nextCutDay)
             /*cards[i].cutDay = */
         }
-        return res.status(200).json(allCards)
+        return res.status(200).json(resultCards)
     }).catch(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     })
@@ -171,5 +200,7 @@ module.exports = {
     Delete,
     Purchases,
     PurchasesNow,
-    PurchasesNextMonth
+    PurchasesNextMonth,
+    SharedWith,
+    UndoShared
 }
