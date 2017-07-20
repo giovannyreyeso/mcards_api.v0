@@ -9,7 +9,7 @@ const PurchaseSchema = Schema({
         required: true
     },
     date: {
-        type: Date,
+        type: Number,
         required: true
     },
     msi: {

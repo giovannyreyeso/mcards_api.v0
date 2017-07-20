@@ -3,11 +3,11 @@ const Schema = mongoose.Schema
 const MovementSchema = Schema({
     type: {
         type: String,
-        enum: ['PAY', 'DEPOSIT'],
+        enum: ['PAY', 'DEPOSIT', 'TRASFER'],
         require: true
     },
     date: {
-        type: Date,
+        type: Number,
         require: true
     },
     total: {
@@ -34,6 +34,16 @@ const MovementSchema = Schema({
 
 MovementSchema.pre('save', function (next) {
     const totalPurchase = this.total;
+    switch (this.type) {
+        case value:
+            
+            break;
+    
+        default:
+            break;
+    }
+
+
     if (this.cash) {
         Cash.findOne({ '_id': new ObjectId(this.cash) }).then(function (cash) {
             if (cash === null)

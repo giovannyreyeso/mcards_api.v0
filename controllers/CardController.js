@@ -24,8 +24,8 @@ function PurchasesNow(req, res) {
     Card.findOne({ '_id': req.params.id }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
-        let actualCutDay = CardService.GetActualDayCut(card.cutDay);
-        let pastCutDay = CardService.GetPastDayCut(card.cutDay);
+        let actualCutDay = CardService.GetActualDayCutUnix(card.cutDay);
+        let pastCutDay = CardService.GetPastDayCutUnix(card.cutDay);
 
         Purchase.find({
             'card': new ObjectId(card._id),
@@ -47,8 +47,8 @@ function PurchasesNextMonth(req, res) {
     Card.findOne({ '_id': req.params.id }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
-        let actualCutDay = CardService.GetActualDayCut(card.cutDay);
-        let nextCutDay = CardService.GetNextDayCut(card.cutDay);
+        let actualCutDay = CardService.GetActualDayCutUnix(card.cutDay);
+        let nextCutDay = CardService.GetNextDayCutUnix(card.cutDay);
         Purchase.find({
             'card': new ObjectId(card._id),
             'user': req.user._id,
@@ -83,10 +83,10 @@ function UndoShared(req, res) {
     Card.findOne({ '_id': req.params.id }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
-            card.sharedWith.pull(req.params.iduser)
+        card.sharedWith.pull(req.params.iduser)
         return card.save()
     }).then(function (result) {
-        return res.status(200).json({statusCode:200,message:'Ya no compartes esta tarjeta con este usuario'});
+        return res.status(200).json({ statusCode: 200, message: 'Ya no compartes esta tarjeta con este usuario' });
     }).catch(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     })
@@ -170,6 +170,7 @@ function Create(req, res) {
     const newCard = new Card({
         user: req.user._id,
         name: req.body.name,
+        limit: req.body.limit,
         available: req.body.available,
         cutDay: req.body.cutDay
     })
