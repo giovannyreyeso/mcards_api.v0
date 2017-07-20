@@ -153,6 +153,8 @@ function Modify(req, res) {
     }).then(function (card) {
         if (card === null)
             throw new Error('La tarjeta no existe');
+        if(card.user != req.user._id)
+            throw new Error('La tarjeta no te pertenece =(');
         return card;
     }).then(function (card) {
         return Card.update({ '_id': card._id }, req.body);
