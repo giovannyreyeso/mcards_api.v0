@@ -72,7 +72,8 @@ function Create(req, res) {
             description: req.body.description,
             date: req.body.date,
             total: req.body.total,
-            card: req.body.card
+            card: req.body.card,
+            category:req.body.category
         })
     }
     newPurchase.save(function (err, purchase) {
