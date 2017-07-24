@@ -7,10 +7,7 @@ const moment = require('moment')
 const CardService = require('../services/CardService')
 const PurchaseService = require('../services/PurchaseService')
 const DateService = require('../services/DateService')
-/**TO DO
- * 1) Modificar la fecha de compra a Number para usar unix
- * 
-****/
+
 function Purchases(req, res) {
     Purchase.find({
         'card': req.params.id,
@@ -71,7 +68,7 @@ function PurchasesNextMonth(req, res) {
 }
 function SharedWith(req, res) {
     let date = req.params.date;
-    if (!DateService.IsValidDate(date, 30)) {
+    if (!DateService.DateIsLowerThanOneDay(date)) {
         throw new Error("El link para compartir ha caducado");
     }
     Card.findOne({ '_id': req.params.id }).then(function (card) {

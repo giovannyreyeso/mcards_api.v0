@@ -17,17 +17,7 @@ function Me(req, res) {
         if (user != null) {
             return res.status(200).json(user)
         }
-        const newUser = User({
-            uid: req.user.user_id,
-            name: req.user.name,
-            email: req.user.email,
-            picture: req.user.picture
-        })
-        newUser.save(function (err, user) {
-            if (err)
-                res.status(500).json(err)
-            res.status(200).json(user)
-        });
+        res.status(200).json(user)
     })
 }
 function Register(req, res) {

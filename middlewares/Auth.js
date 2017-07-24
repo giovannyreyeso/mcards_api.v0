@@ -1,6 +1,9 @@
 'use strict'
 const firebase_admin = require("firebase-admin")
 const User = require('../models/User')
+const Category = require('../models/Category')
+const DefaultData = require('../data/DefaultData')
+const DEFAULT_CATEGORY = DefaultData.DEFAULT_CATEGORY;
 
 function isAuthorized(req, res, next) {
     let token;
@@ -49,6 +52,13 @@ function isAuthorized(req, res, next) {
                 if (err)
                     res.status(500).json(err)
                 req.user._id = userSaved._id
+                for (let i = 0; i < DEFAULT_CATEGORY.length; i++) {
+                    const category = new Category({
+                        name: DEFAULT_CATEGORY[i],
+                        user: userSaved._id
+                    })
+                    category.save();
+                }
                 next();
             });
         })

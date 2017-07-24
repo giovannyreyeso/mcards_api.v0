@@ -6,7 +6,6 @@ const ObjectId = require('mongoose').Types.ObjectId
 const PurchaseSchema = Schema({
     description: {
         type: String,
-        required: true
     },
     date: {
         type: Number,
@@ -28,6 +27,11 @@ const PurchaseSchema = Schema({
     voucherPhoto: [{
         type: String
     }],
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',

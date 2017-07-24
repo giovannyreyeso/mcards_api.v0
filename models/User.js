@@ -7,12 +7,9 @@ const UserSchema = Schema({
     picture: String,
     moneda: {
         type: String,
-        enum: ['MXN', 'USD']
+        enum: ['MXN', 'USD'],
+        default: 'MXN'
     },
-    tags: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Card'
-    }],
     cash: {
         type: Schema.Types.ObjectId,
         ref: 'Cash'
@@ -20,9 +17,13 @@ const UserSchema = Schema({
     cards: [{
         type: Schema.Types.ObjectId,
         ref: 'Card'
+    }],
+    category: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     }]
 }, {
-    timestamps: true,
-    versionKey: false
-})
+        timestamps: true,
+        versionKey: false
+    })
 module.exports = mongoose.model('User', UserSchema)
