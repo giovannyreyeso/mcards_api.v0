@@ -3,7 +3,6 @@ const config = require('../config')
 const express = require('express')
 const api = express.Router()
 const auth = require('../middlewares/Auth')
-const sleep = require('sleep-promise');
 
 const UserController = require('../controllers/UserController')
 const CardController = require('../controllers/CardController')
