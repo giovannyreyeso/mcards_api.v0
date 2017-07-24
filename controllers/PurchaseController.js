@@ -62,7 +62,8 @@ function Create(req, res) {
         description: req.body.description,
         date: req.body.date,
         total: req.body.total,
-        cash: req.body.cash
+        cash: req.body.cash,
+        category:req.body.category
     })
     if (req.body.card) {
         delete newPurchase.cash;
