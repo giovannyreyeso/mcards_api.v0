@@ -12,7 +12,7 @@ function Purchases(req, res) {
     Purchase.find({
         'card': req.params.id,
         'user': req.user._id
-    }).then(function (purchases) {
+    }).populate('category').then(function (purchases) {
         return res.status(200).json(purchases);
     }).catch(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
