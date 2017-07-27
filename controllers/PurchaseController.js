@@ -63,7 +63,7 @@ function Create(req, res) {
         date: req.body.date,
         total: req.body.total,
         cash: req.body.cash,
-        category:req.body.category
+        category:req.body.category._id
     })
     if (req.body.card) {
         delete newPurchase.cash;
@@ -73,7 +73,7 @@ function Create(req, res) {
             date: req.body.date,
             total: req.body.total,
             card: req.body.card,
-            category:req.body.category
+            category:req.body.category._id
         })
     }
     newPurchase.save(function (err, purchase) {
