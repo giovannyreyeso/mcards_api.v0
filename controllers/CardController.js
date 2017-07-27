@@ -30,7 +30,7 @@ function PurchasesNow(req, res) {
             'card': new ObjectId(card._id),
             'user': req.user._id,
             'date': { "$gte": pastCutDay, "$lt": actualCutDay }
-        })
+        }).populate('category');
     }).then(function (purchases) {
         let purchasesData = {
             payDay: CardService.GetPayDayUnix(card_obj.cutDay),
@@ -54,7 +54,7 @@ function PurchasesNextMonth(req, res) {
             'card': new ObjectId(card._id),
             'user': req.user._id,
             'date': { "$gte": actualCutDay, "$lt": nextCutDay }
-        })
+        }).populate('category');
     }).then(function (purchases) {
         let purchasesData = {
             payDay: CardService.GetNextPayDay(card_obj.cutDay),
