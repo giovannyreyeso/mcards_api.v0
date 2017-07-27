@@ -7,7 +7,7 @@ const moment = require('moment')
 function List(req, res) {
     Purchase.find({
         'user': new ObjectId(req.user._id)
-    }).then(function (purchase) {
+    }).populate('category').then(function (purchase) {
         return res.status(200).json(purchase)
     }).then(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
