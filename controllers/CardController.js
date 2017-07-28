@@ -57,7 +57,7 @@ function PurchasesNextMonth(req, res) {
         }).populate('category');
     }).then(function (purchases) {
         let purchasesData = {
-            payDay: CardService.GetNextPayDay(card_obj.cutDay),
+            payDay: CardService.GetPayDayUnix(card_obj.cutDay),
             total: PurchaseService.SumPurchase(purchases),
             purchases: purchases
         }
