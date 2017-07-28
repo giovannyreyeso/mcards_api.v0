@@ -107,6 +107,7 @@ function Create(req, res) {
             });
             newPurchaseMSI.save()
         }
+        updateAvailableAfterSave({ card: req.body.card, total: req.body.total })
         return res.status(200).json(newPurchaseMSI);
     }
     newPurchase.save(function (err, purchase) {
@@ -115,6 +116,7 @@ function Create(req, res) {
                 statusCode: 500,
                 message: err.message
             })
+        updateAvailableAfterSave(newPurchase)
         return res.status(200).json(purchase)
     })
 }
@@ -138,7 +140,25 @@ function updateAvailableAfterDelete(purchase) {
         })
     }
 }
-
+function updateAvailableAfterSave(purchase) {
+    const totalPurchase = purchase.total;
+    if (purchase.cash) {
+        Cash.findOne({ '_id': new ObjectId(purchase.cash) }).then(function (cash) {
+            if (cash === null)
+                throw new Error('El monto en efectivo no existe');
+            const newAviable = cash.available - totalPurchase;
+            return Cash.update({ '_id': new ObjectId(cash._id) }, { 'available': newAviable });
+        })
+    } else {
+        Card.findOne({ '_id': new ObjectId(purchase.card) }).then(function (card) {
+            if (card === null)
+                throw new Error('La tarjeta no existe');
+            const newAviable = card.available - totalPurchase;
+            const newBalance = card.balance + totalPurchase;
+            return Card.update({ '_id': new ObjectId(card._id) }, { 'available': newAviable, 'balance': newBalance });
+        })
+    }
+}
 module.exports = {
     List,
     Create,

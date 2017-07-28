@@ -49,34 +49,7 @@ const PurchaseSchema = Schema({
         timestamps: true,
         versionKey: false
     })
-PurchaseSchema.pre('save', function (next) {
-    const totalPurchase = this.total;
-    if (this.cash) {
-        Cash.findOne({ '_id': new ObjectId(this.cash) }).then(function (cash) {
-            if (cash === null)
-                throw new Error('El monto en efectivo no existe');
-            const newAviable = cash.available - totalPurchase;
-            return Cash.update({ '_id': new ObjectId(cash._id) }, { 'available': newAviable });
-        }).then(function (cash) {
-            next();
-        }).catch(function (err) {
-            next(new Error(err));
-        })
-    } else {
-        
-        Card.findOne({ '_id': new ObjectId(this.card) }).then(function (card) {
-            if (card === null)
-                throw new Error('La tarjeta no existe');
-            const newAviable = card.available - totalPurchase;
-            const newBalance = card.balance + totalPurchase;
-            return Card.update({ '_id': new ObjectId(card._id) }, { 'available': newAviable, 'balance': newBalance });
-        }).then(function (card) {
-            next();
-        }).catch(function (err) {
-            next(new Error(err));
-        })
-    }
-});
+
 PurchaseSchema.pre('find', function (next) {
     this.populate('category');
     next();
