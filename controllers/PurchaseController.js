@@ -92,7 +92,7 @@ function Create(req, res) {
         let newPurchaseMSI;
         let noMSI = parseInt(req.body.noMSI);
         let total = parseInt(req.body.total)
-        let totalXMonth = total / noMSI;
+        let totalXMonth = (total / noMSI).toFixed(2);
         for (let i = 1; i <= noMSI; i++) {
             let purchaseDate = moment(req.body.date * 1000);
             newPurchaseMSI = new Purchase({
