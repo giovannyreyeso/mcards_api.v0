@@ -10,17 +10,14 @@ const CashController = require('../controllers/CashController')
 const PurchaseController = require('../controllers/PurchaseController')
 const MovementController = require('../controllers/MovementController')
 const CategoryController = require('../controllers/CategoryController')
-// api.get('/test', function (req, res) {
-//     console.log("Request its comming...")
-//     // sleep(10000).then(function () {
-//     //     console.log('10 seconds later …')
-//     //     res.status(200).json('ok');
-//     // });
-//      res.status(200).json('ok');
-// })
+
 api.get('/me', auth.isAuthorized, UserController.Me)
 api.get('/user', auth.isAuthorized, UserController.FinByEmail);
 api.get('/category',auth.isAuthorized,CategoryController.List);
+api.post('/category',auth.isAuthorized,CategoryController.Create);
+api.put('/category',auth.isAuthorized,CategoryController.Modify);
+api.delete('/category/:id',auth.isAuthorized,CategoryController.Delete);
+
 /**BEGIN CARDS*/
 api.get('/card/:id', auth.isAuthorized, CardController.GetById)
 api.get('/card', auth.isAuthorized, CardController.List)

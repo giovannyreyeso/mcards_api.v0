@@ -7,7 +7,7 @@ const moment = require('moment')
 function List(req, res) {
     Purchase.find({
         'user': new ObjectId(req.user._id)
-    }).populate('category').then(function (purchase) {
+    }).then(function (purchase) {
         return res.status(200).json(purchase)
     }).then(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
@@ -63,7 +63,7 @@ function Create(req, res) {
         date: req.body.date,
         total: req.body.total,
         cash: req.body.cash,
-        category:req.body.category._id
+        category:req.body.category
     })
     if (req.body.card) {
         delete newPurchase.cash;
@@ -73,7 +73,7 @@ function Create(req, res) {
             date: req.body.date,
             total: req.body.total,
             card: req.body.card,
-            category:req.body.category._id
+            category:req.body.category
         })
     }
     newPurchase.save(function (err, purchase) {
