@@ -3,6 +3,8 @@ const Purchase = require('../models/Purchase')
 const User = require('../models/User')
 const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment')
+const Cash = require('../models/Cash')
+const Card = require('../models/Card')
 
 function List(req, res) {
     Purchase.find({
@@ -25,18 +27,22 @@ function GetById(req, res) {
     });
 }
 function Delete(req, res) {
+    let purchaseToDeleted;
     Purchase.findOne({
         '_id': new ObjectId(req.params.id)
     }).then(function (purchase) {
         if (purchase === null)
             throw new Error('la compra no existe');
+        purchaseToDeleted = purchase;
         return Purchase.deleteOne({ '_id': new ObjectId(req.params.id) })
     }).then(function () {
+        updateAvailableAfterDelete(purchaseToDeleted);
         return res.status(200).json({ statusCode: 200, message: 'compra eliminada eliminado correctamente' });
     }).catch(function (err) {
         return res.status(500).json({ statusCode: 500, message: err.message });
     });
 }
+
 function Modify(req, res) {
     Purchase.findOne({
         '_id': new ObjectId(req.params.id)
@@ -63,7 +69,7 @@ function Create(req, res) {
         date: req.body.date,
         total: req.body.total,
         cash: req.body.cash,
-        category:req.body.category
+        category: req.body.category
     })
     if (req.body.card) {
         delete newPurchase.cash;
@@ -73,7 +79,7 @@ function Create(req, res) {
             date: req.body.date,
             total: req.body.total,
             card: req.body.card,
-            category:req.body.category
+            category: req.body.category
         })
     }
     newPurchase.save(function (err, purchase) {
@@ -85,6 +91,35 @@ function Create(req, res) {
         return res.status(200).json(purchase)
     })
 }
+
+function updateAvailableAfterDelete(purchase) {
+    const totalPurchase = purchase.total;
+    if (purchase.cash) {
+        Cash.findOne({ '_id': new ObjectId(purchase.cash) }).then(function (cash) {
+            if (cash === null)
+                throw new Error('El monto en efectivo no existe');
+            const newAviable = cash.available + totalPurchase;
+            return Cash.update({ '_id': new ObjectId(cash._id) }, { 'available': newAviable });
+        }).then(function (cash) {
+            next();
+        }).catch(function (err) {
+            next(new Error(err));
+        })
+    } else {
+        Card.findOne({ '_id': new ObjectId(purchase.card) }).then(function (card) {
+            if (card === null)
+                throw new Error('La tarjeta no existe');
+            const newAviable = card.available + totalPurchase;
+            const newBalance = card.balance - totalPurchase;
+            return Card.update({ '_id': new ObjectId(card._id) }, { 'available': newAviable, 'balance': newBalance });
+        }).then(function (card) {
+            next();
+        }).catch(function (err) {
+            next(new Error(err));
+        })
+    }
+}
+
 module.exports = {
     List,
     Create,
