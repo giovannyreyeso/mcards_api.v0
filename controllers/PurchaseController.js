@@ -99,7 +99,7 @@ function updateAvailableAfterDelete(purchase) {
             if (cash === null)
                 throw new Error('El monto en efectivo no existe');
             const newAviable = cash.available + totalPurchase;
-            Cash.update({ '_id': new ObjectId(cash._id) }, { 'available': newAviable });
+            return Cash.update({ '_id': new ObjectId(cash._id) }, { 'available': newAviable });
         });
     } else {
         Card.findOne({ '_id': new ObjectId(purchase.card) }).then(function (card) {
@@ -107,7 +107,7 @@ function updateAvailableAfterDelete(purchase) {
                 throw new Error('La tarjeta no existe');
             const newAviable = card.available + totalPurchase;
             const newBalance = card.balance - totalPurchase;
-            Card.update({ '_id': new ObjectId(card._id) }, { 'available': newAviable, 'balance': newBalance });
+            return Card.update({ '_id': new ObjectId(card._id) }, { 'available': newAviable, 'balance': newBalance });
         })
     }
 }
