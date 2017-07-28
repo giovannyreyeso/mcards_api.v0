@@ -82,6 +82,33 @@ function Create(req, res) {
             category: req.body.category
         })
     }
+    if (req.body.msi) {
+        if (!req.body.noMSI) {
+            return res.status(500).json({
+                statusCode: 500,
+                message: "El campo No. de meses sin intereses es requerido"
+            })
+        }
+        let newPurchaseMSI;
+        let noMSI = parseInt(req.body.noMSI);
+        let total = parseInt(req.body.total)
+        let totalXMonth = total / noMSI;
+        for (let i = 1; i <= noMSI; i++) {
+            let purchaseDate = moment(req.body.date * 1000);
+            newPurchaseMSI = new Purchase({
+                user: req.user._id,
+                description: req.body.description,
+                date: moment(purchaseDate).add(i, 'month').unix(),
+                total: totalXMonth,
+                card: req.body.card,
+                category: req.body.category,
+                noMSI: req.body.noMSI,
+                msi: req.body.msi
+            });
+            newPurchaseMSI.save()
+        }
+        return res.status(200).json(newPurchaseMSI);
+    }
     newPurchase.save(function (err, purchase) {
         if (err)
             return res.status(500).json({
