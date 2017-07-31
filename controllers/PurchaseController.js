@@ -70,7 +70,7 @@ function Create(req, res) {
         date: req.body.date,
         total: req.body.total,
         cash: req.body.cash,
-        category: req.body.category._id
+        category: req.body.category._
     })
     if (req.body.card) {
         delete newPurchase.cash;
@@ -102,7 +102,7 @@ function Create(req, res) {
                 description: req.body.description,
                 purchaseGroup: payUUID,
                 noPayment: `Pago ${i} de ${req.body.noMSI}`,
-                date: moment(purchaseDate).add(i, 'month').unix(),
+                date: i == 1 ? req.body.date : moment(purchaseDate).add(i, 'month').unix(),
                 total: totalXMonth,
                 card: req.body.card,
                 category: req.body.category._id,
