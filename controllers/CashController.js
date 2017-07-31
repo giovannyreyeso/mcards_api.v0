@@ -73,7 +73,7 @@ function Create(req, res) {
     const newCash = new Cash({
         user: req.user._id,
         description: req.body.description,
-        aviable: req.body.aviable
+        available: req.body.available
     })
     newCash.save(function (err, cash) {
         if (err)

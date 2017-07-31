@@ -4,6 +4,12 @@ const Cash = require('../models/Cash')
 const Card = require('../models/Card')
 const ObjectId = require('mongoose').Types.ObjectId
 const PurchaseSchema = Schema({
+    purchaseGroup: {
+        type: String,
+    },
+    noPayment: {
+        type: String,
+    },
     description: {
         type: String,
     },

@@ -5,6 +5,7 @@ const ObjectId = require('mongoose').Types.ObjectId
 const moment = require('moment')
 const Cash = require('../models/Cash')
 const Card = require('../models/Card')
+const uuidv1 = require('uuid/v1');
 
 function List(req, res) {
     Purchase.find({
@@ -93,11 +94,14 @@ function Create(req, res) {
         let noMSI = parseInt(req.body.noMSI);
         let total = parseInt(req.body.total)
         let totalXMonth = (total / noMSI).toFixed(2);
+        let payUUID = uuidv1();
         for (let i = 1; i <= noMSI; i++) {
             let purchaseDate = moment(req.body.date * 1000);
             newPurchaseMSI = new Purchase({
                 user: req.user._id,
                 description: req.body.description,
+                purchaseGroup: payUUID,
+                noPayment: `Pago ${i} de ${req.body.noMSI}`,
                 date: moment(purchaseDate).add(i, 'month').unix(),
                 total: totalXMonth,
                 card: req.body.card,

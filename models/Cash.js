@@ -5,7 +5,7 @@ const CashSchema = Schema({
         type: String,
         required: true
     },
-    aviable: {
+    available: {
         type: Number,
         required: true
     },
