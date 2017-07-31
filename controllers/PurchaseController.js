@@ -70,7 +70,7 @@ function Create(req, res) {
         date: req.body.date,
         total: req.body.total,
         cash: req.body.cash,
-        category: req.body.category
+        category: req.body.category._id
     })
     if (req.body.card) {
         delete newPurchase.cash;
@@ -80,7 +80,7 @@ function Create(req, res) {
             date: req.body.date,
             total: req.body.total,
             card: req.body.card,
-            category: req.body.category
+            category: req.body.category._id
         })
     }
     if (req.body.msi) {
@@ -105,7 +105,7 @@ function Create(req, res) {
                 date: moment(purchaseDate).add(i, 'month').unix(),
                 total: totalXMonth,
                 card: req.body.card,
-                category: req.body.category,
+                category: req.body.category._id,
                 noMSI: req.body.noMSI,
                 msi: req.body.msi
             });
