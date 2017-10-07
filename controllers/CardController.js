@@ -183,6 +183,7 @@ function Create(req, res) {
         name: req.body.name,
         limit: req.body.limit,
         available: req.body.available,
+        isCreditCard: req.body.isCreditCard,
         cutDay: req.body.cutDay
     })
     newCard.save(function (err, card) {
